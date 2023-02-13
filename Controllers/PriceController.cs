@@ -1,4 +1,5 @@
 
+using System;
 using System.Collections.Generic;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -24,6 +25,7 @@ namespace PriceService.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<PriceDto>> GetAllPrices()
         {
+            Console.WriteLine("Get all prices");
             return Ok(_mapper.Map<IEnumerable<PriceDto>>(_repository.GetAllPrices()));
         }
 

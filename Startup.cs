@@ -31,6 +31,7 @@ namespace PriceService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            Console.WriteLine(Configuration.GetConnectionString("mssql"));
             services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("mssql")));
 
             services.AddScoped<IPricesRepository, PriceRepository>();
@@ -53,6 +54,14 @@ namespace PriceService
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "PriceService v1"));
             }
+            
+            app.Use(async (context, next) =>
+            {
+                Console.WriteLine($"Method: {context.Request.Method}");
+                Console.WriteLine($"Path: {context.Request.Path.Value}");
+                await next();
+            });
+
 
             app.UseRouting();
             
