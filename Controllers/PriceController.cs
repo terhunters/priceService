@@ -34,7 +34,7 @@ namespace PriceService.Controllers
         public ActionResult<PriceDto> CreateOrUpdatePrice(int platformId, CreatePriceDto createDto)
         {
             var newPrice = _mapper.Map<Price>(createDto);
-            if (!_repository.ExternalIdExist(platformId))
+            if (_repository.ExternalIdExist(platformId))
             {
                 var updatedPrice = _repository.GetPricesByPlatformId(platformId);
                 newPrice.PlatformId = updatedPrice.PlatformId;
