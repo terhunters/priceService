@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: price-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: price-service
+  template:
+    metadata:
+      labels:
+        app: price-service
+    spec:
+      containers:
+        - name: price-service
+          image: ghcr.io/terhunters/price-service:latest
+      imagePullSecrets:
+        - name: regcred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: price-clusterip-srv
+spec:
+  type: ClusterIP
+  selector:
+    app: price-service
+  ports:
+    - name: price-service
+      protocol: TCP
+      port: 80
+      targetPort: 80
+      
