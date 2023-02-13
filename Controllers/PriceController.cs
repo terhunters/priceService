@@ -8,7 +8,7 @@ using PriceService.Model;
 
 namespace PriceService.Controllers
 {
-    [Route("api/[controller]/{platformId}")]
+    [Route("api/[controller]/{platformId?}")]
     [ApiController]
     public class PriceController : ControllerBase
     {
@@ -28,6 +28,7 @@ namespace PriceService.Controllers
         }
 
         [HttpPost]
+        [Route("")]
         public ActionResult<PriceDto> CreateOrUpdatePrice(int platformId, CreatePriceDto createDto)
         {
             var newPrice = _mapper.Map<Price>(createDto);
