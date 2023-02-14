@@ -7,21 +7,6 @@ namespace PriceService.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Platforms",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Publisher = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Version = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Platforms", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Prices",
                 columns: table => new
                 {
@@ -51,9 +36,6 @@ namespace PriceService.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Prices");
-
-            migrationBuilder.DropTable(
-                name: "Platforms");
         }
     }
 }
