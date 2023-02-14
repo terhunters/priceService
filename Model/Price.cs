@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PriceService.Model
 {
@@ -9,6 +10,8 @@ namespace PriceService.Model
         public int Id { get; set; }
         [Required]
         public int PlatformId { get; set; }
+        [ForeignKey("PlatformId")]
+        public Platform Platform { get; set; }
         [Required]
         public int PriceValue { get; set; }
     }

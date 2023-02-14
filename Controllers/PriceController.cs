@@ -43,7 +43,10 @@ namespace PriceService.Controllers
             }
             else
             {
-                _repository.CreatePrice(platformId, newPrice);
+                if (!_repository.CreatePrice(platformId, newPrice))
+                {
+                    return NotFound(nameof(platformId));
+                }
             }
 
             return Ok(_mapper.Map<PriceDto>(newPrice));

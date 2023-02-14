@@ -28,12 +28,14 @@ namespace PriceService.DataBase
             return _context.Prices.ToList();
         }
 
-        public void CreatePrice(int platformId, Price price)
+        public bool CreatePrice(int platformId, Price price)
         {
+            if (_context.Platforms.FirstOrDefault(x => x.Id == platformId) == null) return false;
+            
             price.PlatformId = platformId;
             _context.Add(price);
 
-            SaveChanges();
+            return SaveChanges();
         }
 
         public void UpdatePrice(Price price)

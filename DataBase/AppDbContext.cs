@@ -11,5 +11,6 @@ namespace PriceService.DataBase
         }
 
         public DbSet<Price> Prices { get; set; }
+        public DbSet<Platform> Platforms { get; set; }
     }
 }

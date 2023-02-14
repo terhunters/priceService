@@ -11,7 +11,7 @@ namespace PriceService.DataBase
 
         IEnumerable<Price> GetAllPrices();
 
-        void CreatePrice(int platformId, Price price);
+        bool CreatePrice(int platformId, Price price);
         
         void UpdatePrice(Price price);
 
