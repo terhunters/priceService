@@ -45,7 +45,7 @@ namespace PriceService.Controllers
             {
                 if (!_repository.CreatePrice(platformId, newPrice))
                 {
-                    return NotFound(nameof(platformId));
+                    return NotFound($"Platform with {nameof(platformId)} = {platformId.ToString()} was not found");
                 }
             }
 
