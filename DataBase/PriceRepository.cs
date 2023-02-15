@@ -82,7 +82,7 @@ namespace PriceService.DataBase
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                return db.Query<int>("SELECT * FROM Platforms WHERE ExternalId = @platformId",
+                return db.Query<Platform>("SELECT * FROM Platforms WHERE ExternalId = @platformId",
                     new { platformId }).FirstOrDefault() != null;
             }
         }
@@ -91,7 +91,7 @@ namespace PriceService.DataBase
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                var result = db.Query<int>("SELECT * FROM Platforms WHERE Id = @platformId",
+                var result = db.Query<Platform>("SELECT * FROM Platforms WHERE Id = @platformId",
                     new { platformId }).FirstOrDefault();
                 Console.WriteLine($"Platform Exist result: {result}");
                 return result != null;
