@@ -60,8 +60,8 @@ namespace PriceService
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
-            
-            //PrepDb.StartMigration(app);
+
+            PrepDb.UpdateDB(app);
         }
     }
 }

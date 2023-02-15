@@ -51,4 +51,16 @@ public class ClientHub
     {
         Console.WriteLine($"Start updating platforms to synchronize them");
     }
+
+    public async void GetAllPlatforms()
+    {
+        try
+        {
+            await _connection.InvokeAsync("GetAllPlatforms");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Cannot get platforms from signalR: {ex.Message}");
+        }
+    }
 }
