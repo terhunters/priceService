@@ -53,7 +53,7 @@ namespace PriceService.DataBase
             {
                 if (!PlatformExist(platformId)) return false;
                 
-                var id = db.Query<int>("INSERT INTO Prices (PlatformId, PriceValue) Values(@platformId, @priceValue)",
+                var id = db.Query<int>("INSERT INTO Prices (PlatformId, PriceValue) Values(@platformId, @priceValue); SELECT CAST(SCOPE_IDENTITY() as int)",
                     new { platformId = platformId, priceValue = price.PriceValue }).FirstOrDefault();
 
                 if (id != null)
