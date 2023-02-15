@@ -29,7 +29,7 @@ namespace PriceService
             
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-            services.AddSingleton<ClientHub>(provider => new ClientHub(provider.GetRequiredService<IPricesRepository>(), Configuration.GetConnectionString("signalR"),
+            services.AddSingleton<ClientHub>(provider => new ClientHub(provider.GetRequiredService<IPricesRepository>(), Configuration,
                 provider.GetRequiredService<IMapper>()));
 
             services.AddControllers();
