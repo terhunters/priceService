@@ -68,8 +68,8 @@ public class ClientHub
         try
         {
             await _connWebSocket.StartAsync();
-            await _connSse.StartAsync();
-            await _connLongPooling.StartAsync();
+            // await _connSse.StartAsync();
+            // await _connLongPooling.StartAsync();
         }
         catch (Exception ex)
         {
@@ -128,14 +128,14 @@ public class ClientHub
             _wtchWebSocket = new Stopwatch();
             _wtchWebSocket.Start();
             await _connWebSocket.InvokeAsync("GetAllPlatforms");
-
-            _wtchSse = new Stopwatch();
-            _wtchSse.Start();
-            await _connSse.InvokeAsync("GetAllPlatforms");
-            
-            _wtchLongPooling = new Stopwatch();
-            _wtchLongPooling.Start();
-            await _connLongPooling.InvokeAsync("GetAllPlatforms");
+            //
+            // _wtchSse = new Stopwatch();
+            // _wtchSse.Start();
+            // await _connSse.InvokeAsync("GetAllPlatforms");
+            //
+            // _wtchLongPooling = new Stopwatch();
+            // _wtchLongPooling.Start();
+            // await _connLongPooling.InvokeAsync("GetAllPlatforms");
         }
         catch (Exception ex)
         {
