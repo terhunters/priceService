@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Configuration;
@@ -70,11 +71,18 @@ public class ClientHub
             await _connWebSocket.StartAsync();
             // await _connSse.StartAsync();
             // await _connLongPooling.StartAsync();
+            _connWebSocket.Closed += OnClosed;
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Cannot connect to server hub(SignalR): {ex.Message}");
         }
+    }
+
+    private Task OnClosed(Exception arg)
+    {
+        Console.WriteLine($"Connection closed {arg}");
+        return Task.CompletedTask;
     }
 
     private void LoggerForNotify(string message, TypeTransport typeTransport)
