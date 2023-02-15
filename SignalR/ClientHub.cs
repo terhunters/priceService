@@ -14,6 +14,8 @@ public class ClientHub
     public ClientHub(IPricesRepository repo, string connectionString)
     {
         _repository = repo;
+        
+        Console.WriteLine($"Connection string to SignalR: {connectionString}");
         _connection = new HubConnectionBuilder().WithUrl(connectionString).Build();
         
         RegisterFunctions();
@@ -29,6 +31,7 @@ public class ClientHub
 
     private async void ConnectToHub()
     {
+        Console.WriteLine("Start connect to server hub(SignalR)");
         try
         {
             await _connection.StartAsync();

@@ -28,7 +28,7 @@ namespace PriceService
             
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-            services.AddSingleton<ClientHub>();
+            services.AddSingleton<ClientHub>(provider => new ClientHub(provider.GetRequiredService<IPricesRepository>(), Configuration.GetConnectionString("signalR")));
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
