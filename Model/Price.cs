@@ -1,18 +1,18 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
 namespace PriceService.Model
 {
-    public class Price
+    public interface IPrice
     {
-        [Key]
-        [Required]
+        int Id { get; set; }
+        int PlatformId { get; set; }
+        int PriceValue { get; set; }
+    }
+
+    public class Price : IPrice
+    {
         public int Id { get; set; }
-        [Required]
-        public int PlatformId { get; set; }
-        [ForeignKey("PlatformId")]
-        public Platform Platform { get; set; }
-        [Required]
         public int PriceValue { get; set; }
+        public int PlatformId { get; set; }
+        
+        public string PlatformName { get; set; }
     }
 }

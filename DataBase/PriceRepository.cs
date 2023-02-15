@@ -1,53 +1,59 @@
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
+using Dapper;
+using Microsoft.Data.SqlClient;
 using PriceService.Model;
 
 namespace PriceService.DataBase
 {
     public class PriceRepository : IPricesRepository
     {
-        private readonly AppDbContext _context;
+        private readonly string _connectionString;
 
-        public PriceRepository(AppDbContext context)
+        public PriceRepository(string connectionString)
         {
-            _context = context;
+            _connectionString = connectionString;
         }
         
-        public bool SaveChanges()
-        {
-            return (_context.SaveChanges() >= 0);
-        }
 
-        public Price GetPricesByPlatformId(int platformId)
+        public Price GetPriceByPlatformId(int platformId)
         {
-            return _context.Prices.FirstOrDefault(x => x.PlatformId == platformId);
+            using (IDbConnection db = new SqlConnection(_connectionString))
+            {
+                return db.Query<Price>("SELECT Prices.Id, Prices.PriceValue, Platforms.ExternalId as PlatformId, Platforms.Name as PlatformName " +
+                                       "FROM Prices LEFT JOIN Platforms ON Prices.PlatformId == Platforms.Id " +
+                                       "WHERE PlatformId = @platformId", new { platformId }).FirstOrDefault();
+            }
         }
 
         public IEnumerable<Price> GetAllPrices()
         {
-            return _context.Prices.ToList();
+            using (IDbConnection db = new SqlConnection(_connectionString))
+            {
+                return db.Query<Price>("SELECT Prices.Id, Prices.PriceValue, Platforms.ExternalId as PlatformId, Platforms.Name as PlatformName " +
+                                       "FROM Prices LEFT JOIN Platforms ON Prices.PlatformId == Platforms.Id").ToList();
+            }
         }
 
         public bool CreatePrice(int platformId, Price price)
         {
-            if (_context.Platforms.FirstOrDefault(x => x.Id == platformId) == null) return false;
-            
-            price.PlatformId = platformId;
-            _context.Add(price);
-
-            return SaveChanges();
+            throw new System.NotImplementedException();
         }
 
         public void UpdatePrice(Price price)
         {
-            var updatedPrice = _context.Prices.First(x => x.Id == price.Id);
-            updatedPrice.PriceValue = price.PriceValue;
-            SaveChanges();
+            throw new System.NotImplementedException();
         }
 
         public bool ExternalIdExist(int platformId)
         {
-            return _context.Prices.FirstOrDefault(x => x.PlatformId == platformId) != null;
+            throw new System.NotImplementedException();
+        }
+
+        public void CreatePlatform()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

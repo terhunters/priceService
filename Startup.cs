@@ -1,19 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Web;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using PriceService.DataBase;
 
@@ -32,9 +22,8 @@ namespace PriceService
         public void ConfigureServices(IServiceCollection services)
         {
             Console.WriteLine(Configuration.GetConnectionString("mssql"));
-            services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("mssql")));
 
-            services.AddScoped<IPricesRepository, PriceRepository>();
+            services.AddScoped<IPricesRepository, PriceRepository>(provider => new PriceRepository(Configuration.GetConnectionString("mssql")));
             
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -69,7 +58,7 @@ namespace PriceService
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
             
-            PrepDb.StartMigration(app);
+            //PrepDb.StartMigration(app);
         }
     }
 }

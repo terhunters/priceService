@@ -1,17 +1,16 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace PriceService.Model
 {
-    public class Platform
+    public interface IPlatform
     {
-        [Key]
-        [Required]
+        int Id { get; set; }
+        int ExternalId { get; set; }
+        string Name { get; set; }
+    }
+
+    public class Platform : IPlatform
+    {
         public int Id { get; set; }
-        [Required]
+        public int ExternalId { get; set; }
         public string Name { get; set; }
-        [Required]
-        public string Publisher { get; set; }
-        [Required]
-        public string Version { get; set; }
     }
 }
