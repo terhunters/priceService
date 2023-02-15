@@ -92,9 +92,9 @@ namespace PriceService.DataBase
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
                 var result = db.Query<int>("SELECT * FROM Platforms WHERE Id = @platformId",
-                    new { platformId }).FirstOrDefault() != null;
+                    new { platformId }).FirstOrDefault();
                 Console.WriteLine($"Platform Exist result: {result}");
-                return result;
+                return result != null;
             }
         }
 
