@@ -1,4 +1,5 @@
 using System;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -28,7 +29,8 @@ namespace PriceService
             
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-            services.AddSingleton<ClientHub>(provider => new ClientHub(provider.GetRequiredService<IPricesRepository>(), Configuration.GetConnectionString("signalR")));
+            services.AddSingleton<ClientHub>(provider => new ClientHub(provider.GetRequiredService<IPricesRepository>(), Configuration.GetConnectionString("signalR"),
+                provider.GetRequiredService<IMapper>()));
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
