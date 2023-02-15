@@ -58,6 +58,8 @@ public class ClientHub
         _connSse.On<IEnumerable<CreatePlatformDto>>("ReceivePlatforms", platforms => UpdateNotExistingPlatforms(platforms, TypeTransport.SSE));
         _connLongPooling.On<string>("Notify", message => LoggerForNotify(message, TypeTransport.LongPooling));
         _connLongPooling.On<IEnumerable<CreatePlatformDto>>("ReceivePlatforms", platforms => UpdateNotExistingPlatforms(platforms, TypeTransport.LongPooling));
+
+        _connWebSocket.On<CreatePlatformDto>("CreatedNewPlatform", CreatedNewPlatform);
     }
 
     private async void ConnectToHub()
@@ -106,6 +108,16 @@ public class ClientHub
             {
                 _repository.CreatePlatform(_mapper.Map<Platform>(platform));
             }
+        }
+    }
+
+    private void CreatedNewPlatform(CreatePlatformDto platform)
+    {
+        Console.WriteLine($"Start creating new platform {platform.Name}");
+
+        if (!_repository.ExternalIdExist(platform.Id))
+        {
+            _repository.CreatePlatform(_mapper.Map<Platform>(platform));
         }
     }
 
