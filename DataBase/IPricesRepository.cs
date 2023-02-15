@@ -5,7 +5,9 @@ namespace PriceService.DataBase
 {
     public interface IPricesRepository
     {
-        Price GetPriceByPlatformId(int platformId);
+        Price GetPriceByExternalPlatformId(int platformId);
+        
+        Price GetPriceByInternalPlatformId(int platformId);
 
         IEnumerable<Price> GetAllPrices();
 
@@ -14,7 +16,9 @@ namespace PriceService.DataBase
         void UpdatePrice(Price price);
 
         bool ExternalIdExist(int platformId);
+        
+        bool PlatformExist(int platformId);
 
-        void CreatePlatform();
+        bool CreatePlatform(Platform platform);
     }
 }

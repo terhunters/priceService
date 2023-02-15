@@ -3,6 +3,7 @@ using System.Data;
 using System.Linq;
 using Dapper;
 using Microsoft.Data.SqlClient;
+using PriceService.DTO;
 using PriceService.Model;
 
 namespace PriceService.DataBase
@@ -17,11 +18,21 @@ namespace PriceService.DataBase
         }
         
 
-        public Price GetPriceByPlatformId(int platformId)
+        public Price GetPriceByExternalPlatformId(int platformId)
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
                 return db.Query<Price>("SELECT Prices.Id, Prices.PriceValue, Platforms.ExternalId as PlatformId, Platforms.Name as PlatformName " +
+                                       "FROM Prices LEFT JOIN Platforms ON Platforms.ExternalId = Platforms.Id " +
+                                       "WHERE PlatformId = @platformId", new { platformId }).FirstOrDefault();
+            }
+        }
+
+        public Price GetPriceByInternalPlatformId(int platformId)
+        {
+            using (IDbConnection db = new SqlConnection(_connectionString))
+            {
+                return db.Query<Price>("SELECT Prices.Id, Prices.PriceValue, Prices.PlatformId, Platforms.Name as PlatformName " +
                                        "FROM Prices LEFT JOIN Platforms ON Prices.PlatformId = Platforms.Id " +
                                        "WHERE PlatformId = @platformId", new { platformId }).FirstOrDefault();
             }
@@ -38,7 +49,22 @@ namespace PriceService.DataBase
 
         public bool CreatePrice(int platformId, Price price)
         {
-            throw new System.NotImplementedException();
+            using (IDbConnection db = new SqlConnection(_connectionString))
+            {
+                if (!PlatformExist(platformId)) return false;
+                
+                var id = db.Query<int>("INSERT INTO Prices (PlatformId, PriceValue) Values(@platformId, @priceValue)",
+                    new { platformId = platformId, priceValue = price.PriceValue }).FirstOrDefault();
+
+                if (id != null)
+                {
+                    price.Id = id;
+                    price.PlatformId = platformId;
+                    return true;
+                }
+
+                return false;
+            }
         }
 
         public void UpdatePrice(Price price)
@@ -48,12 +74,38 @@ namespace PriceService.DataBase
 
         public bool ExternalIdExist(int platformId)
         {
-            throw new System.NotImplementedException();
+            using (IDbConnection db = new SqlConnection(_connectionString))
+            {
+                return db.Query<int>("SELECT * FROM Platforms WHERE ExternalId = @platformId",
+                    new { platformId }).FirstOrDefault() != null;
+            }
         }
 
-        public void CreatePlatform()
+        public bool PlatformExist(int platformId)
         {
-            throw new System.NotImplementedException();
+            using (IDbConnection db = new SqlConnection(_connectionString))
+            {
+                return db.Query<int>("SELECT * FROM Platforms WHERE Id = @platformId",
+                    new { platformId }).FirstOrDefault() != null;
+            }
+        }
+
+        public bool CreatePlatform(Platform platform)
+        {
+            using (IDbConnection db = new SqlConnection(_connectionString))
+            {
+                if (ExternalIdExist(platform.Id)) return false;
+                
+                var id = db.Query<int>("INSERT INTO Platforms (ExternalId, Name) Values(@externalId, @Name)",
+                    new { externalId = platform.Id, Name = platform.Name }).FirstOrDefault();
+                if (id != null)
+                {
+                    platform.Id = id;
+                    return true;
+                }
+
+                return false;
+            }
         }
     }
 }
