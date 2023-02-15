@@ -22,7 +22,7 @@ namespace PriceService.DataBase
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
                 return db.Query<Price>("SELECT Prices.Id, Prices.PriceValue, Platforms.ExternalId as PlatformId, Platforms.Name as PlatformName " +
-                                       "FROM Prices LEFT JOIN Platforms ON Prices.PlatformId == Platforms.Id " +
+                                       "FROM Prices LEFT JOIN Platforms ON Prices.PlatformId = Platforms.Id " +
                                        "WHERE PlatformId = @platformId", new { platformId }).FirstOrDefault();
             }
         }
@@ -32,7 +32,7 @@ namespace PriceService.DataBase
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
                 return db.Query<Price>("SELECT Prices.Id, Prices.PriceValue, Platforms.ExternalId as PlatformId, Platforms.Name as PlatformName " +
-                                       "FROM Prices LEFT JOIN Platforms ON Prices.PlatformId == Platforms.Id").ToList();
+                                       "FROM Prices LEFT JOIN Platforms ON Prices.PlatformId = Platforms.Id").ToList();
             }
         }
 
