@@ -32,6 +32,7 @@ namespace PriceService.Controllers
         [Route("{platformId}")]
         public ActionResult<PriceDto> CreatePrice(int platformId, CreatePriceDto createDto)
         {
+            Console.WriteLine("Create Price from controller");
             var newPrice = _mapper.Map<Price>(createDto);
             if (!_repository.CreatePrice(platformId, newPrice))
             {

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -51,8 +52,13 @@ namespace PriceService.DataBase
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                if (!PlatformExist(platformId)) return false;
+                if (!PlatformExist(platformId))
+                {
+                    Console.WriteLine($"Platform with id = {platformId} doesn't exist");
+                    return false;
+                }
                 
+                Console.WriteLine("Start query to create new Price");
                 var id = db.Query<int>("INSERT INTO Prices (PlatformId, PriceValue) Values(@platformId, @priceValue); SELECT CAST(SCOPE_IDENTITY() as int)",
                     new { platformId = platformId, priceValue = price.PriceValue }).FirstOrDefault();
 
@@ -85,8 +91,10 @@ namespace PriceService.DataBase
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                return db.Query<int>("SELECT * FROM Platforms WHERE Id = @platformId",
+                var result = db.Query<int>("SELECT * FROM Platforms WHERE Id = @platformId",
                     new { platformId }).FirstOrDefault() != null;
+                Console.WriteLine($"Platform Exist result: {result}");
+                return result;
             }
         }
 
