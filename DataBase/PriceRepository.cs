@@ -4,7 +4,6 @@ using System.Data;
 using System.Linq;
 using Dapper;
 using Microsoft.Data.SqlClient;
-using PriceService.DTO;
 using PriceService.Model;
 
 namespace PriceService.DataBase
@@ -64,6 +63,7 @@ namespace PriceService.DataBase
 
                 if (id != null)
                 {
+                    Console.WriteLine("Price created");
                     price.Id = id;
                     price.PlatformId = platformId;
                     return true;
@@ -91,10 +91,8 @@ namespace PriceService.DataBase
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                var result = db.Query<Platform>("SELECT * FROM Platforms WHERE Id = @platformId",
-                    new { platformId }).FirstOrDefault();
-                Console.WriteLine($"Platform Exist result: {result}");
-                return result != null;
+                return db.Query<Platform>("SELECT * FROM Platforms WHERE Id = @platformId",
+                    new { platformId }).FirstOrDefault() != null;
             }
         }
 
@@ -102,12 +100,18 @@ namespace PriceService.DataBase
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                if (ExternalIdExist(platform.Id)) return false;
+                if (ExternalIdExist(platform.Id))
+                {
+                    Console.WriteLine($"Platform with externalId = {platform.Id} doesn't exist");
+                    return false;
+                }
                 
+                Console.WriteLine("Start query to create new Platform");
                 var id = db.Query<int>("INSERT INTO Platforms (ExternalId, Name) Values(@externalId, @Name)",
                     new { externalId = platform.Id, Name = platform.Name }).FirstOrDefault();
                 if (id != null)
                 {
+                    Console.WriteLine("Platform created");
                     platform.Id = id;
                     return true;
                 }

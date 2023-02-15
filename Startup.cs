@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using PriceService.DataBase;
+using PriceService.SignalR;
 
 namespace PriceService
 {
@@ -26,6 +27,8 @@ namespace PriceService
             services.AddScoped<IPricesRepository, PriceRepository>(provider => new PriceRepository(Configuration.GetConnectionString("mssql")));
             
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            services.AddSingleton<ClientHub>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
