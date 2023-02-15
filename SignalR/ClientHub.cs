@@ -69,9 +69,11 @@ public class ClientHub
         try
         {
             await _connWebSocket.StartAsync();
-            // await _connSse.StartAsync();
-            // await _connLongPooling.StartAsync();
-            _connWebSocket.Closed += OnClosed;
+            await _connSse.StartAsync();
+            await _connLongPooling.StartAsync();
+            _connWebSocket.Closed += (exception) => OnClosed(exception, TypeTransport.WebSocket);
+            _connSse.Closed += (exception) => OnClosed(exception, TypeTransport.SSE);
+            _connLongPooling.Closed += (exception) => OnClosed(exception, TypeTransport.LongPooling);
         }
         catch (Exception ex)
         {
@@ -79,10 +81,27 @@ public class ClientHub
         }
     }
 
-    private Task OnClosed(Exception arg)
+    private Task OnClosed(Exception arg, TypeTransport typeTransport)
     {
         Console.WriteLine($"Connection closed {arg}");
+        Reconnect(typeTransport);
         return Task.CompletedTask;
+    }
+
+    private async void Reconnect(TypeTransport typeTransport)
+    {
+        switch (typeTransport)
+        {
+            case TypeTransport.WebSocket: 
+                await _connWebSocket.StartAsync();
+                break;
+            case TypeTransport.SSE: 
+                await _connSse.StartAsync();
+                break;
+            case TypeTransport.LongPooling: 
+                await _connLongPooling.StartAsync();
+                break;
+        }
     }
 
     private void LoggerForNotify(string message, TypeTransport typeTransport)
@@ -136,14 +155,14 @@ public class ClientHub
             _wtchWebSocket = new Stopwatch();
             _wtchWebSocket.Start();
             await _connWebSocket.InvokeAsync("GetAllPlatforms");
-            //
-            // _wtchSse = new Stopwatch();
-            // _wtchSse.Start();
-            // await _connSse.InvokeAsync("GetAllPlatforms");
-            //
-            // _wtchLongPooling = new Stopwatch();
-            // _wtchLongPooling.Start();
-            // await _connLongPooling.InvokeAsync("GetAllPlatforms");
+            
+            _wtchSse = new Stopwatch();
+            _wtchSse.Start();
+            await _connSse.InvokeAsync("GetAllPlatforms");
+            
+            _wtchLongPooling = new Stopwatch();
+            _wtchLongPooling.Start();
+            await _connLongPooling.InvokeAsync("GetAllPlatforms");
         }
         catch (Exception ex)
         {
