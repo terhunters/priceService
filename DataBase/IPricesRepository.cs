@@ -17,7 +17,7 @@ namespace PriceService.DataBase
 
         bool ExternalIdExist(int platformId);
         
-        bool PlatformExist(int platformId);
+        Platform PlatformExist(int platformId);
 
         bool CreatePlatform(Platform platform);
     }

@@ -34,20 +34,11 @@ namespace PriceService.Controllers
         {
             Console.WriteLine("Create Price from controller");
             var newPrice = _mapper.Map<Price>(createDto);
-            Console.WriteLine($"createDto.PriceValue: {createDto.PriceValue}");
-            Console.WriteLine($"newPrice.Id: {newPrice.Id}");
-            Console.WriteLine($"newPrice.PriceValue: {newPrice.PriceValue}");
-            Console.WriteLine($"newPrice.PlatformId: {newPrice.PlatformId}");
-            Console.WriteLine($"newPrice.PlatformName: {newPrice.PlatformName}");
+            
             if (!_repository.CreatePrice(platformId, newPrice))
             {
                 return NotFound($"Platform with {nameof(platformId)} = {platformId.ToString()} was not found");
             }
-            
-            Console.WriteLine($"newPrice.Id: {newPrice.Id}");
-            Console.WriteLine($"newPrice.PriceValue: {newPrice.PriceValue}");
-            Console.WriteLine($"newPrice.PlatformId: {newPrice.PlatformId}");
-            Console.WriteLine($"newPrice.PlatformName: {newPrice.PlatformName}");
             
             return Ok(_mapper.Map<PriceDto>(newPrice));
         }

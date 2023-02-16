@@ -51,14 +51,15 @@ namespace PriceService.DataBase
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                if (!PlatformExist(platformId))
+                var platform = PlatformExist(platformId);
+                if (platform is null)
                 {
                     Console.WriteLine($"Platform with id = {platformId} doesn't exist");
                     return false;
                 }
                 
                 Console.WriteLine("Start query to create new Price");
-                var id = db.Query<int>("INSERT INTO Prices (PlatformId, PriceValue) Values(@platformId, @priceValue); SELECT CAST(SCOPE_IDENTITY() as int)",
+                var id = db.Query<int>("INSERT INTO Prices (PlatformId, PriceValue) Values(@platformId, @priceValue);",
                     new { platformId = platformId, priceValue = price.PriceValue }).FirstOrDefault();
 
                 if (id != null)
@@ -66,6 +67,7 @@ namespace PriceService.DataBase
                     Console.WriteLine("Price created");
                     price.Id = id;
                     price.PlatformId = platformId;
+                    price.PlatformName = platform.Name;
                     return true;
                 }
 
@@ -87,12 +89,12 @@ namespace PriceService.DataBase
             }
         }
 
-        public bool PlatformExist(int platformId)
+        public Platform PlatformExist(int platformId)
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
                 return db.Query<Platform>("SELECT * FROM Platforms WHERE Id = @platformId",
-                    new { platformId }).FirstOrDefault() != null;
+                    new { platformId }).FirstOrDefault();
             }
         }
 
